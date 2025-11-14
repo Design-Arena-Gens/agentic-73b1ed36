@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Dreams</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, #0a0015 0%, #1a0533 25%, #2d1b69 50%, #1a0533 75%, #0a0015 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.5), 0 0 40px rgba(138, 43, 226, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.8), 0 0 80px rgba(138, 43, 226, 0.5); }
+        }
+
+        .email-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            padding: 60px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c0c0ff 0%, #e6e6ff 25%, #ffffff 50%, #e6e6ff 75%, #c0c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(192, 192, 255, 0.5);
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            color: #b8b8ff;
+            font-style: italic;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        .content-wrapper {
+            position: relative;
+        }
+
+        .floating-section {
+            position: relative;
+            margin: 60px 0;
+        }
+
+        .product-card {
+            background: rgba(25, 15, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 30px;
+            padding: 50px;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(138, 43, 226, 0.8);
+            box-shadow: 0 30px 60px rgba(138, 43, 226, 0.4),
+                        0 0 50px rgba(138, 43, 226, 0.3) inset;
+        }
+
+        .card-left {
+            transform: rotate(-3deg);
+            margin-left: -40px;
+        }
+
+        .card-center {
+            z-index: 3;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .card-right {
+            transform: rotate(3deg);
+            margin-right: -40px;
+            margin-top: -30px;
+        }
+
+        .product-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-subtitle {
+            font-size: 1.2em;
+            color: #b8b8ff;
+            margin-bottom: 25px;
+            font-style: italic;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.6s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-card:hover .product-details {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .product-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #d4d4ff;
+            margin-bottom: 30px;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .product-features li {
+            padding: 12px 0;
+            color: #c0c0ff;
+            font-size: 1.05em;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .product-features li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: #8a2be2;
+            font-size: 1.2em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: linear-gradient(135deg, #6a1b9a 0%, #8a2be2 50%, #9c4dcc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(138, 43, 226, 0.7);
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .constellation {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .constellation-1 {
+            top: 10%;
+            right: 5%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .constellation-2 {
+            bottom: 20%;
+            left: 8%;
+            animation: float 12s ease-in-out infinite reverse;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.5) 50%, transparent 100%);
+            margin: 80px 0;
+            position: relative;
+        }
+
+        .divider::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #8a2be2;
+            font-size: 2em;
+            background: #0a0015;
+            padding: 0 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .footer-text {
+            color: #9090c0;
+            font-size: 0.95em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-link {
+            display: inline-block;
+            margin: 0 15px;
+            color: #b8b8ff;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 25px;
+        }
+
+        .social-link:hover {
+            color: #ffffff;
+            border-color: #8a2be2;
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .comet {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white, 0 0 20px white;
+            animation: comet-fall 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes comet-fall {
+            0% {
+                opacity: 1;
+                transform: translateX(0) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(300px) translateY(300px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5em;
+            }
+
+            .product-card {
+                padding: 30px;
+                margin: 30px 0;
+            }
+
+            .card-left, .card-right {
+                transform: rotate(0);
+                margin: 30px 0;
+            }
+
+            .product-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="starfield" id="starfield"></div>
+
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">CELESTIA</div>
+            <div class="tagline">Where Dreams Touch the Stars</div>
+        </div>
+
+        <svg class="constellation constellation-1" viewBox="0 0 150 150">
+            <circle cx="30" cy="30" r="2" fill="#8a2be2" opacity="0.8"/>
+            <circle cx="80" cy="45" r="2" fill="#8a2be2" opacity="0.8"/>
+            <circle cx="120" cy="60" r="2" fill="#8a2be2" opacity="0.8"/>
+            <circle cx="70" cy="90" r="2" fill="#8a2be2" opacity="0.8"/>
+            <circle cx="110" cy="110" r="2" fill="#8a2be2" opacity="0.8"/>
+            <line x1="30" y1="30" x2="80" y2="45" stroke="#8a2be2" stroke-width="0.5" opacity="0.4"/>
+            <line x1="80" y1="45" x2="120" y2="60" stroke="#8a2be2" stroke-width="0.5" opacity="0.4"/>
+            <line x1="80" y1="45" x2="70" y2="90" stroke="#8a2be2" stroke-width="0.5" opacity="0.4"/>
+            <line x1="70" y1="90" x2="110" y2="110" stroke="#8a2be2" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+
+        <svg class="constellation constellation-2" viewBox="0 0 150 150">
+            <circle cx="40" cy="40" r="2" fill="#4169e1" opacity="0.8"/>
+            <circle cx="90" cy="30" r="2" fill="#4169e1" opacity="0.8"/>
+            <circle cx="110" cy="70" r="2" fill="#4169e1" opacity="0.8"/>
+            <circle cx="60" cy="100" r="2" fill="#4169e1" opacity="0.8"/>
+            <circle cx="100" cy="120" r="2" fill="#4169e1" opacity="0.8"/>
+            <line x1="40" y1="40" x2="90" y2="30" stroke="#4169e1" stroke-width="0.5" opacity="0.4"/>
+            <line x1="90" y1="30" x2="110" y2="70" stroke="#4169e1" stroke-width="0.5" opacity="0.4"/>
+            <line x1="110" y1="70" x2="60" y2="100" stroke="#4169e1" stroke-width="0.5" opacity="0.4"/>
+            <line x1="60" y1="100" x2="100" y2="120" stroke="#4169e1" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+
+        <div class="content-wrapper">
+            <div class="floating-section">
+                <div class="product-card card-left">
+                    <h2 class="product-title">Nebula Collection</h2>
+                    <p class="product-subtitle">Ethereal Essence</p>
+                    <div class="product-details">
+                        <p class="product-description">
+                            Immerse yourself in the cosmic beauty of our Nebula Collection. Each piece captures the swirling mysteries of distant galaxies, bringing celestial elegance to your world.
+                        </p>
+                        <ul class="product-features">
+                            <li>Handcrafted with stellar precision</li>
+                            <li>Infused with cosmic energy crystals</li>
+                            <li>Limited to 100 celestial pieces</li>
+                            <li>Includes certificate of authenticity</li>
+                        </ul>
+                        <a href="#" class="cta-button"><span>DISCOVER MORE</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="floating-section">
+                <div class="product-card card-center">
+                    <h2 class="product-title">Stardust Elixir</h2>
+                    <p class="product-subtitle">Celestial Radiance</p>
+                    <div class="product-details">
+                        <p class="product-description">
+                            A transformative experience bottled from the essence of falling stars. This luminous elixir brings otherworldly glow and ethereal beauty to those who seek cosmic enchantment.
+                        </p>
+                        <ul class="product-features">
+                            <li>Harvested during meteor showers</li>
+                            <li>Contains rare moonstone particles</li>
+                            <li>Glows with bioluminescent shimmer</li>
+                            <li>Encased in aurora-glass vessels</li>
+                        </ul>
+                        <a href="#" class="cta-button"><span>EXPERIENCE MAGIC</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="floating-section">
+                <div class="product-card card-right">
+                    <h2 class="product-title">Aurora Dreams</h2>
+                    <p class="product-subtitle">Northern Enchantment</p>
+                    <div class="product-details">
+                        <p class="product-description">
+                            Inspired by the dancing lights of the aurora borealis, this exclusive collection weaves the magic of polar skies into wearable art that shifts and shimmers with every movement.
+                        </p>
+                        <ul class="product-features">
+                            <li>Color-shifting prismatic design</li>
+                            <li>Embedded with rare earth minerals</li>
+                            <li>Reflects light in 12 spectral hues</li>
+                            <li>Sustainably sourced materials</li>
+                        </ul>
+                        <a href="#" class="cta-button"><span>EMBRACE WONDER</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                Journey beyond the ordinary • Embrace the extraordinary<br>
+                The cosmos awaits your discovery
+            </p>
+            <div class="social-links">
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Cosmos</a>
+                <a href="#" class="social-link">Universe</a>
+            </div>
+            <p class="footer-text" style="margin-top: 30px; font-size: 0.85em;">
+                © 2024 Celestia • Crafted in the Stars<br>
+                <a href="#" style="color: #8a2be2; text-decoration: none;">Unsubscribe from cosmic wonders</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Create animated starfield
+        const starfield = document.getElementById('starfield');
+        const starCount = 150;
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+
+            const size = Math.random() * 2 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            star.style.animationDelay = Math.random() * 5 + 's';
+
+            starfield.appendChild(star);
+        }
+
+        // Create occasional comets
+        function createComet() {
+            const comet = document.createElement('div');
+            comet.className = 'comet';
+            comet.style.left = Math.random() * 50 + '%';
+            comet.style.top = Math.random() * 50 + '%';
+            comet.style.animationDelay = Math.random() * 2 + 's';
+            starfield.appendChild(comet);
+
+            setTimeout(() => {
+                comet.remove();
+            }, 3000);
+        }
+
+        setInterval(createComet, 4000);
+
+        // Add shimmer effect to cards on mouse move
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', x + 'px');
+                card.style.setProperty('--mouse-y', y + 'px');
+            });
+        });
+    </script>
+</body>
+</html>
